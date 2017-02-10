@@ -7,6 +7,12 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous">
+    </script>
+
     <!-- Latest compiled and minified CSS -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -26,7 +32,7 @@
       }
       .myDiv {
       	/*float:left;*/
-      	height:90%;
+      	height:100%;
       	width:100%;
       	/*background-color:#FF0000;*/
       }
@@ -39,27 +45,29 @@
   </head>
 
   <body>
+    <!-- <div class="container"> -->
+      <!-- Bahnhofstafel -->
+      
+      <iframe class='myDiv' src="http://iris.noncd.db.de/wbt/js/index.html?bhf=NN&impressum=0&zeilen=20&typ=ab" width='100%' height='100%' frameborder="0" border-width='0px'></iframe>
 
-    <!-- Bahnhofstafel -->
-    <iframe class='myDiv' src="http://iris.noncd.db.de/wbt/js/index.html?bhf=NN&impressum=0&zeilen=20&typ=ab" width='100%' height='100%' frameborder="0" border-width='0px'></iframe>
-
-    <!-- Navbar -->
+      <!-- Navbar -->
 
 
 
 
-    <!-- Additional Stations -->
-    <div class="list-group">
-      <div class="list-group-item btn-toolbar" role="toolbar" aria-label="...">
-        <a class="btn" href="#" role="button">Link</a>
-        <a class="btn" href="#" role="button">Impressum</a>
+      <!-- Additional Stations -->
+      <div class="list-group">
+        <div class="list-group-item btn-toolbar" role="toolbar" aria-label="...">
+          <a class="btn" href="#" role="button">Link</a>
+          <a class="btn" href="#" role="button">Impressum</a>
+        </div>
+        <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Cras justo odio</button>
+        <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Dapibus ac facilisis in</button>
+        <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Morbi leo risus</button>
+        <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Porta ac consectetur ac</button>
+        <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Vestibulum at eros</button>
       </div>
-      <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Cras justo odio</button>
-      <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Dapibus ac facilisis in</button>
-      <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Morbi leo risus</button>
-      <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Porta ac consectetur ac</button>
-      <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Vestibulum at eros</button>
-    </div>
+    <!-- </div> -->
 
     <!-- <script>
       $( window ).resize(function() {
