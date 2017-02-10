@@ -1,0 +1,28 @@
+<assembly>
+	<id>dist</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<fileSets>
+		<fileSet>
+			<includes>
+				<include>README*</include>
+				<include>LICENSE*</include>
+				<include>NOTICE*</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/resources</directory>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+	</fileSets>
+	<dependencySets>
+		<dependencySet>
+			<!--outputDirectory>lib</outputDirectory-->
+			<scope>compile</scope>
+			<includes>
+				<include>org.hisrc.stopdirect:stopdirect-api</include>
+			</includes>
+		</dependencySet>
+	</dependencySets>
+</assembly>
