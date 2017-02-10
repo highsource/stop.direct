@@ -5,7 +5,7 @@
   <head>
     <title>Stop</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
 
     <script
       src="https://code.jquery.com/jquery-3.1.1.min.js"
@@ -29,6 +29,8 @@
       body {
       	height:100%;
       	margin:0px;
+        width: 100%;
+        height: 100%;
       }
       .myDiv {
       	/*float:left;*/
@@ -36,7 +38,18 @@
       	width:100%;
       	/*background-color:#FF0000;*/
       }
-      body {margin: 0 0;}
+
+      iframe {
+        height: 92%;
+        width: 100%;
+        /*max-height: 90%;*/
+      }
+
+      .iframe-footer {
+        height: 8%;
+        min-height: 35px;
+      }
+
       /*#screenFiller {
         position: fixed;
         top: 0; right: 0; bottom: 0; left: 0;
@@ -47,20 +60,16 @@
   <body>
     <!-- <div class="container"> -->
       <!-- Bahnhofstafel -->
-      
-      <iframe class='myDiv' src="http://iris.noncd.db.de/wbt/js/index.html?bhf=NN&impressum=0&zeilen=20&typ=ab" width='100%' height='100%' frameborder="0" border-width='0px'></iframe>
-
-      <!-- Navbar -->
-
-
-
-
-      <!-- Additional Stations -->
-      <div class="list-group">
-        <div class="list-group-item btn-toolbar" role="toolbar" aria-label="...">
+      <div class="myDiv">
+        <iframe src="http://iris.noncd.db.de/wbt/js/index.html?bhf=NN&impressum=0&zeilen=10&typ=ab"  frameborder="0" border-width='0px'></iframe>
+        <div class="list-group-item btn-toolbar iframe-footer" role="toolbar" aria-label="...">
           <a class="btn" href="#" role="button">Link</a>
           <a class="btn" href="#" role="button">Impressum</a>
         </div>
+      </div>
+
+      <!-- Additional Stations -->
+      <div class="list-group">
         <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Cras justo odio</button>
         <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Dapibus ac facilisis in</button>
         <button type="button" class="list-group-item"><span class="glyphicon glyphicon-envelope"></span> Morbi leo risus</button>
