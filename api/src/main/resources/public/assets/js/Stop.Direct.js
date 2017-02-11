@@ -1,65 +1,145 @@
-var ajax = {};
-ajax.createXMLHttpRequest = function () {
-    if (typeof XMLHttpRequest !== 'undefined') {
-        return new XMLHttpRequest();
-    }
-    var versions = [
-        "MSXML2.XmlHttp.6.0",
-        "MSXML2.XmlHttp.5.0",
-        "MSXML2.XmlHttp.4.0",
-        "MSXML2.XmlHttp.3.0",
-        "MSXML2.XmlHttp.2.0",
-        "Microsoft.XmlHttp"
-    ];
+var BASE_URL = '/stops';
+var MAX_DISTANCE = 10000;
+var MAX_COUNT = 10;
+var AGENCY_IDS = 'db,mvv,nvbw,vbb,vgn';
 
-    var xhr;
-    for (var i = 0; i < versions.length; i++) {
-        try {
-            xhr = new ActiveXObject(versions[i]);
-            break;
-        } catch (e) {
-        }
-    }
-    return xhr;
+
+var execute = function() {
+	navigator.geolocation.getCurrentPosition(onReceiveCurrentPosition, onErrorReceivingCurrentPosition, { enableHighAccuracy: true, timeout: 30000, maximumAge: 120000});
 };
 
-ajax.request = function (url, method, data, onSuccess, onFailure){
-        var xhr = ajax.createXMLHttpRequest();
+var onReceiveCurrentPosition = function(position) {
+	requestStops(position.coords.longitude, position.coords.latitude);
+};
 
-        xhr.onreadystatechange = function () {
-		if (xhr.readyState === 4 && xhr.status === 200){
-			onSuccess(JSON.parse(xhr.responseText));
-		} else if (xhr.readyState === 4) { // something went wrong but complete
-			onFailure();
+var onErrorReceivingCurrentPosition = function(error) {
+	// TODO error handling
+};
+
+var requestStops = function(lon, lat) {
+	$.ajax({
+		url: BASE_URL,
+		data: {
+			maxDistance: MAX_DISTANCE,
+			maxCount: MAX_COUNT,
+			lon: lon,
+			lat: lat,
+			agencyIds: AGENCY_IDS
 		}
-	};
-	xhr.open(method,url,true);
-	xhr.send();
+	}).then(processAgenciesStopResults);
 };
 
-function receiveCurrentPosition(pos) {
-	var crd = pos.coords;
-        ajax.request('/stops?maxDistance=1000000&lon=' + crd.longitude + '&lat=' + crd.latitude + "&agencyIds=db", 'GET', null, receiveHaltestelle, null);
-};
-
-function errorReceivingCurrentPosition(err) {
-  console.warn('ERROR(' + err.code + '): ' + err.message);
-};
-
-function receiveHaltestelle(agencyStopResults)
-{
-	if (agencyStopResults.length > 0 && agencyStopResults[0].stopResults.length >1)
-	{
-		var agency = agencyStopResults[0].agency;
-		var stopResult = agencyStopResults[0].stopResults[0];
-		var stop = stopResult.stop;
-		var url = agency.agency_departure_board_url_template.replace("{stop_id}", stop.stop_id);
-		window.location.replace(url);
+var processAgenciesStopResults = function(agenciesStopResults) {
+	if (agenciesStopResults.length > 0 && agenciesStopResults[0].stopResults.length > 0) {
+		var selectedAgencyId = agenciesStopResults[0].agency.agency_id;
+		var selectedStopId = agenciesStopResults[0].stopResults[0].stop.stop_id;
+		showAgenciesStopResults(agenciesStopResults, selectedAgencyId, selectedStopId);
 	}
-	else
-	{
-		alert("Could not found any stop.");
+	else {
+		// TODO nothing found
 	}
-}
+};
 
-navigator.geolocation.getCurrentPosition(receiveCurrentPosition, errorReceivingCurrentPosition, { enableHighAccuracy: true, timeout: 30000, maximumAge: 120000});
+var showAgenciesStopResults = function(agenciesStopResults, selectedAgencyId, selectedStopId) {
+	var selectedAgencyStopResult;
+	var agencyStopResults = [];
+	for (var index = 0; index < agenciesStopResults.length; index++) {
+		var agencyStopResult = agenciesStopResults[index];
+		for (var jndex = 0; jndex < agencyStopResult.stopResults.length; jndex++) {
+			var stopResult = agencyStopResult.stopResults[jndex];
+			var currentResult = {
+				agency: agencyStopResult.agency,
+				stopResult: stopResult
+			};
+			if (agencyStopResult.agency.agency_id === selectedAgencyId && stopResult.stop.stop_id === selectedStopId) {
+				selectedAgencyStopResult = currentResult;
+			}
+			else {
+				agencyStopResults.push(currentResult);
+			}
+		}
+	}
+	agencyStopResults.sort(compareAgencyStopResults);
+	agencyStopResults.unshift(selectedAgencyStopResult);
+
+	showAgencyStopResults(agencyStopResults);
+	showSelectedAgencyStopResult(selectedAgencyStopResult);
+};
+
+var showAgenciesStopResults1 = function(agencyStopResults, selectedAgencyId, selectedStopId) {
+	var selectedAgencyStopResult;
+	for (var index = 0; index < agencyStopResults.length; index++) {
+		var agencyStopResult = agencyStopResults[index];
+		var stopResult = agencyStopResult.stopResult; 
+		if (agencyStopResult.agency.agency_id === selectedAgencyId && stopResult.stop.stop_id === selectedStopId) {
+			showSelectedAgencyStopResult(agencyStopResult);
+		}
+	}
+};
+
+
+var compareAgencyStopResults = function(left, right) {
+	return left.stopResult.distance - right.stopResult.distance;
+};
+
+var showSelectedAgencyStopResult = function(agencyStopResult) {
+	$("#selectedAgencyStopResult").empty();
+
+	var agency = agencyStopResult.agency;
+	var stopResult = agencyStopResult.stopResult;
+	var stop = stopResult.stop;
+
+	var agencyDepartureBoardUrl = createAgencyDepartureBoardUrl(agency, stop);
+	
+	var stopResultFrame = $('<iframe/>').addClass('stopResultFrame').attr({
+		src: agencyDepartureBoardUrl,
+		width: "100%",
+		height: "100%",
+		frameborder: "0",
+		'border-width':'0px'
+	});
+	$("#selectedAgencyStopResult").append(stopResultFrame);
+};
+
+var createAgencyDepartureBoardUrl = function(agency, stop) {
+	var url = agency.agency_departure_board_url_template
+		.replace('{stop_id}', stop.stop_id)
+		.replace('{stop_code}', stop.stop_code);
+	return url;
+};
+
+
+var showAgencyStopResults = function(agencyStopResults) {
+	$("#agencyStopResults").empty();
+	var selectAgencyStopResultsElement = $("<select/>").addClass('selectAgencyStopResult');
+	for (var index = 0; index < agencyStopResults.length; index++) {
+		var agencyStopResult = agencyStopResults[index];
+		selectAgencyStopResultsElement.append(createAgencyStopResultOption(agencyStopResult));
+	}
+	selectAgencyStopResultsElement.change(function(){
+		var data = selectAgencyStopResultsElement.val().split('-');
+		var agencyId = data[0];
+		var stopId = data[1];
+		showAgenciesStopResults1(agencyStopResults, agencyId, stopId);
+	});
+	$("#agencyStopResults").append(selectAgencyStopResultsElement);
+};
+
+
+var createAgencyStopResultOption = function(agencyStopResult) {
+	var agency = agencyStopResult.agency;
+	var stopResult = agencyStopResult.stopResult;
+	var stop = stopResult.stop;
+	var distance = stopResult.distance;
+	var distanceText;
+	if (distance < 1000) {
+		distanceText = Math.floor(distance) + 'm';
+	}
+	else {
+		distanceText = Math.floor(distance/1000) + 'km';
+	}
+	var agencyStopResultOption = $("<option>").attr({
+		value: agency.agency_id + '-' + stop.stop_id
+	}).append(stop.stop_name + ' (' + distanceText + ')');
+	return agencyStopResultOption;
+};
