@@ -1,6 +1,6 @@
 "agency_name","agency_departure_board_url_template"
 db,"https://mobile.bahn.de/bin/mobil/bhftafel.exe/dox?L=vs_html5&boardType=dep&maxJourneys=10&start=yes&input={stop_id}"
-mvv,"http://efa.mvv-muenchen.de/mobile/XSLT_DM_REQUEST?limit=10&mode=direct&stateless=1&type_dm=stop&useRealtime=1&itdTripDateTimeDepArr=dep&name_dm={stop_id}"
+mvv,"https://efa.mvv-muenchen.de/mobile/XSLT_DM_REQUEST?limit=10&mode=direct&stateless=1&type_dm=stop&useRealtime=1&itdTripDateTimeDepArr=dep&name_dm={stop_id}"
 nvbw,"http://www.efamobil.de/mobile3/XSLT_DM_REQUEST?limit=10&mode=direct&stateless=1&type_dm=stop&useRealtime=1&itdTripDateTimeDepArr=dep&name_dm={stop_id}"
 vbb,"http://fahrinfo.vbb.de/bin/stboard.exe/dn?start=1&L=vs_html5&boardType=dep&maxJourneys=10&input={stop_id}"
 vgn,"http://m.vgn.de/komfortauskunft/haltestelle/?sl=s:{stop_id}"

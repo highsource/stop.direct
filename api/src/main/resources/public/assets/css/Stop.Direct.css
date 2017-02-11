@@ -2,8 +2,9 @@ html {
 	height: 100%;
 }
 body {
-      	height: 100%;
+ 	height: 100%;
 	margin: 0 0;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 .main {
 	height:100%;
@@ -17,7 +18,13 @@ body {
 	border-radius: 0px;
 }
 .selectedAgencyStopResult {
+	width: 100%;
 	height: 100%;
+	text-align: center;
+	
+}
+.stopResultContainer {
+	vertical-align: middle;
 }
 .stopResultFrame {
 	height: 100%;
