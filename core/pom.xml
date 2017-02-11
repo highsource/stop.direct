@@ -31,6 +31,10 @@
 			<artifactId>gt2-epsg-hsql</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.graphhopper</groupId>
+			<artifactId>directions-api-java-client</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>javax.media</groupId>
 			<artifactId>jai-core</artifactId>
 			<scope>runtime</scope>

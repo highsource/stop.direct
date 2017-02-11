@@ -3,6 +3,7 @@ package org.hisrc.stopdirect.dataccess.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +16,10 @@ import org.hisrc.stopdirect.dataccess.AgencyStopRepository;
 import org.hisrc.stopdirect.dataccess.StopRepository;
 import org.hisrc.stopdirect.model.Agency;
 import org.hisrc.stopdirect.model.AgencyStopResults;
+import org.hisrc.stopdirect.model.Stop;
 import org.hisrc.stopdirect.model.StopResult;
+import org.hisrc.stopdirect.service.MatrixService;
+import org.hisrc.stopdirect.service.impl.GraphHopperMatrixService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +35,7 @@ public class CsvAgencyStopRepository implements AgencyStopRepository {
 	private final List<Agency> agencies;
 	private final Map<String, Agency> agencyById;
 	private final Map<Agency, StopRepository> stopRepositoryByAgency;
+	private final MatrixService matrixService = new GraphHopperMatrixService();
 
 	public CsvAgencyStopRepository() {
 		try {
@@ -101,7 +106,7 @@ public class CsvAgencyStopRepository implements AgencyStopRepository {
 	}
 
 	public List<AgencyStopResults> findNearestStopByAgencyIdAndLonLat(List<String> agencyIds, double lon, double lat,
-			int maxCount, double maxDistance) {
+			int maxCount, double maxDistance, boolean walkingDistance) {
 		final List<String> ids;
 		if (agencyIds == null || agencyIds.isEmpty()) {
 			ids = this.agencies.stream().map(Agency::getId).collect(Collectors.toList());
@@ -109,8 +114,27 @@ public class CsvAgencyStopRepository implements AgencyStopRepository {
 			ids = agencyIds;
 		}
 
-		return ids.stream()
+		List<AgencyStopResults> agency = ids.stream()
 				.map(agencyId -> this.findNearestStopByAgencyIdAndLonLat(agencyId, lon, lat, maxCount, maxDistance))
 				.filter(Objects::nonNull).collect(Collectors.toList());
+		if (walkingDistance) {
+			List<StopResult> stopResults = agency.stream().map(AgencyStopResults::getStopResults)
+					.flatMap(Collection::stream).collect(Collectors.toList());
+			List<Stop> stops = stopResults.stream().map(StopResult::getStop).collect(Collectors.toList());
+			try {
+				List<Double> distances = matrixService.calculateDistances(lon, lat, stops);
+				if (stopResults.size() == distances.size()) {
+					for (int index = 0; index < distances.size(); index++) {
+						final double oldDistance = stopResults.get(index).getDistance();
+						final double newDistance = distances.get(index);
+						stopResults.get(index).setDistance(newDistance);
+						System.out.println("Distance changed from " + oldDistance + " to " + newDistance + ".");
+					}
+				}
+			} catch (Exception ignored) {
+				ignored.printStackTrace();
+			}
+		}
+		return agency;
 	}
 }

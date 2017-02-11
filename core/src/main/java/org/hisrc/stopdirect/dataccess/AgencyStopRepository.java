@@ -13,6 +13,6 @@ public interface AgencyStopRepository {
 	public StopResult findNearestStopByAgencyIdAndLonLat(String agencyId, double lon, double lat);
 
 	public List<AgencyStopResults> findNearestStopByAgencyIdAndLonLat(List<String> agencyIds, double lon, double lat,
-			int maxCount, double maxDistance);
+			int maxCount, double maxDistance, boolean walkingDistance);
 
 }

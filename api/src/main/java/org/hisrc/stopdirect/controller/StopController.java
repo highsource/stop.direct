@@ -40,10 +40,11 @@ public class StopController {
 			@RequestParam(value = "agencyIds", defaultValue = "db") List<String> agencyIds,
 			@RequestParam(value = "lon") double lon, @RequestParam(value = "lat") double lat,
 			@RequestParam(value = "maxCount", defaultValue = "5") int maxCount,
-			@RequestParam(value = "maxDistance", defaultValue = "10000") double maxDistance)
+			@RequestParam(value = "maxDistance", defaultValue = "10000") double maxDistance,
+			@RequestParam(value = "walkingDistance", defaultValue = "false") boolean walkingDistance)
 			throws StopNotFoundException {
 
-		return agencyStopRepository.findNearestStopByAgencyIdAndLonLat(agencyIds, lon, lat, maxCount, maxDistance);
+		return agencyStopRepository.findNearestStopByAgencyIdAndLonLat(agencyIds, lon, lat, maxCount, maxDistance, walkingDistance);
 	}
 
 }

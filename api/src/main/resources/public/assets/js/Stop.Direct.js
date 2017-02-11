@@ -2,6 +2,7 @@ var BASE_URL = '/stops';
 var MAX_DISTANCE = 10000;
 var MAX_COUNT = 10;
 var AGENCY_IDS = 'db,mvv,nvbw,vbb,vgn,by';
+var WALKING_DISTANCE = false;
 var MAX_COUNT_PREFERRED_AGENCY_STOP_RESULTS = 25;
 
 var parseUrlParams = function(url) {
@@ -55,7 +56,8 @@ var requestStops = function(lon, lat) {
 			maxCount: MAX_COUNT,
 			lon: lon,
 			lat: lat,
-			agencyIds: AGENCY_IDS
+			agencyIds: AGENCY_IDS,
+			walkingDistance: WALKING_DISTANCE
 		}
 	}).then(function(results) {
 		processAgenciesStopResults(results, lon, lat);
