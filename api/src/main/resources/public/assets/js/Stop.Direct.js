@@ -124,17 +124,15 @@ var compareAgencyStopResults = function(left, right) {
 
 var renderSelectedAgencyStopResult = function(agencyStopResult) {
 	$("#selectedAgencyStopResult").empty();
-
 	var agency = agencyStopResult.agency;
 	var stopResult = agencyStopResult.stopResult;
 	var stop = stopResult.stop;
 	
 	$("#selectAgencyStopResult").val(agency.agency_id + '-' + stop.stop_id);
 	
-
 	var agencyDepartureBoardUrl = createAgencyDepartureBoardUrl(agency, stop);
 	
-	if (agencyDepartureBoardUrl.startsWith('https://')) {
+	if (agencyDepartureBoardUrl.indexOf('https://') === 0) {
 		var stopResultFrame = $('<iframe/>').addClass('stopResultFrame').attr({
 			src: agencyDepartureBoardUrl,
 			width: "100%",
@@ -281,3 +279,7 @@ function calculateDistance(lon1, lat1, lon2, lat2) {
 	function deg2rad(deg) {
 	  return deg * (Math.PI/180)
 	}
+	
+var log = function(text) {
+	$("#log").append(text).append("<br/>")
+}
