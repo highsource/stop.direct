@@ -1,7 +1,7 @@
 var BASE_URL = '/stops';
 var MAX_DISTANCE = 10000;
 var MAX_COUNT = 10;
-var AGENCY_IDS = 'db,mvv,nvbw,vbb,vgn,by';
+var AGENCY_IDS = 'db,mvv,nvbw,vbb,vgn,by,vrn';
 var WALKING_DISTANCE = false;
 var MAX_COUNT_PREFERRED_AGENCY_STOP_RESULTS = 25;
 
@@ -37,6 +37,20 @@ var createQueryString = function(params) {
 };
 
 var execute = function() {
+	if (PARAMS['lon'] && PARAMS['lat'])
+	{
+		var lon = Number(PARAMS['lon']);
+		var lat = Number(PARAMS['lat']);
+		if (!isNaN(lon) && !isNaN(lat))
+		{
+			requestStops(lon, lat);
+			return;
+		}
+	}
+	navigator.geolocation.getCurrentPosition(onReceiveCurrentPosition, onErrorReceivingCurrentPosition, { enableHighAccuracy: true, timeout: 30000, maximumAge: 120000});
+};
+
+var retrieveCurrentPosition = function() {
 	navigator.geolocation.getCurrentPosition(onReceiveCurrentPosition, onErrorReceivingCurrentPosition, { enableHighAccuracy: true, timeout: 30000, maximumAge: 120000});
 };
 
