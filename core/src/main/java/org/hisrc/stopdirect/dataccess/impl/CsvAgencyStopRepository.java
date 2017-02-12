@@ -128,7 +128,6 @@ public class CsvAgencyStopRepository implements AgencyStopRepository {
 						final double oldDistance = stopResults.get(index).getDistance();
 						final double newDistance = distances.get(index);
 						stopResults.get(index).setDistance(newDistance);
-						System.out.println("Distance changed from " + oldDistance + " to " + newDistance + ".");
 					}
 				}
 			} catch (Exception ignored) {

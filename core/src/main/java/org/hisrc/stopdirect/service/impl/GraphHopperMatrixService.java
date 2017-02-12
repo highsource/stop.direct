@@ -7,19 +7,36 @@ import org.hisrc.stopdirect.model.Stop;
 import org.hisrc.stopdirect.service.MatrixService;
 
 import com.graphhopper.api.GHMRequest;
+import com.graphhopper.api.GHMatrixSyncRequester;
 import com.graphhopper.api.GraphHopperMatrixWeb;
 import com.graphhopper.api.MatrixResponse;
 import com.graphhopper.util.shapes.GHPoint;
 
 public class GraphHopperMatrixService implements MatrixService {
 
-	private final String apiKey = System.getProperty("GRAPHHOPPER_API_KEY");
+	private final GraphHopperMatrixWeb matrixClient;
+
+	{
+		final String apiKey;
+		String apiKeyFromEnvironmentVariable = System.getenv("GRAPHHOPPER_API_KEY");
+		if (apiKeyFromEnvironmentVariable != null && !apiKeyFromEnvironmentVariable.isEmpty()) {
+			apiKey = apiKeyFromEnvironmentVariable;
+		} else {
+			String apiKeyFromSystemPropertyVariable = System.getProperty("GRAPHHOPPER_API_KEY");
+			if (apiKeyFromSystemPropertyVariable != null && !apiKeyFromSystemPropertyVariable.isEmpty()) {
+				apiKey = apiKeyFromSystemPropertyVariable;
+			}
+
+			else {
+				apiKey = "none";
+			}
+		}
+		matrixClient = new GraphHopperMatrixWeb(new GHMatrixSyncRequester()).setKey(apiKey);
+	}
 
 	@Override
 	public List<Double> calculateDistances(double fromLon, double fromLat, List<Stop> toStops) {
 
-		GraphHopperMatrixWeb matrixClient = new GraphHopperMatrixWeb();
-		matrixClient.setKey(apiKey);
 		GHMRequest ghmRequest = new GHMRequest();
 		ghmRequest.addOutArray("distances");
 		ghmRequest.setVehicle("foot");
