@@ -6,3 +6,5 @@ vbb,"http://fahrinfo.vbb.de/bin/stboard.exe/dn?start=1&L=vs_html5&boardType=dep&
 vgn,"http://m.vgn.de/komfortauskunft/haltestelle/?sl=s:{stop_id}"
 by,"http://www.bayern-fahrplan.de/m5/de/?name_dm={stop_id}#departures"
 vrn,"https://www.vrn.de/mng/#/XSLT_DM_REQUEST?dm={stop_id}"
+rnn,"http://fahrplanauskunft.vrn.de/rnn_mobile/XSLT_DM_REQUEST?limit=10&mode=direct&stateless=1&type_dm=stop&useRealtime=1&itdTripDateTimeDepArr=dep&name_dm={stop_id}"
+vrt,"http://efa9.vrn.de/vrt_mobile/XSLT_DM_REQUEST?limit=10&mode=direct&stateless=1&type_dm=stop&useRealtime=1&itdTripDateTimeDepArr=dep&name_dm={stop_id}"
