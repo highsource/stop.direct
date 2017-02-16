@@ -1,7 +1,7 @@
 var BASE_URL = '/stops';
 var MAX_DISTANCE = 10000;
 var MAX_COUNT = 10;
-var AGENCY_IDS = 'db,mvv,nvbw,vbb,vgn,by,vrn,rnn,vrt';
+var AGENCY_IDS = 'db,mvv,nvbw,vbb,vgn,by,vrn,rnn,vrt,vrm,vvo';
 var WALKING_DISTANCE = false;
 var MAX_COUNT_PREFERRED_AGENCY_STOP_RESULTS = 25;
 
@@ -47,7 +47,12 @@ var execute = function() {
 			return;
 		}
 	}
-	navigator.geolocation.getCurrentPosition(onReceiveCurrentPosition, onErrorReceivingCurrentPosition, { enableHighAccuracy: true, timeout: 30000, maximumAge: 120000});
+	if (navigator && navigator.geolocation) {
+		retrieveCurrentPosition();
+	}
+	else {
+		$("#geolocationUndefined").show();
+	}
 };
 
 var retrieveCurrentPosition = function() {
@@ -58,8 +63,26 @@ var onReceiveCurrentPosition = function(position) {
 	requestStops(position.coords.longitude, position.coords.latitude);
 };
 
+var showGeolocationErrorMessage = function(error, category) {
+	if (error.message) {
+		$("#" + category + "Message").append(" Fehlermeldung: ").append(error.message);
+	}
+	$("#" + category).show();
+}
 var onErrorReceivingCurrentPosition = function(error) {
-	// TODO error handling
+	if (error.code) {
+		if (error.code === 1) {
+			showGeolocationErrorMessage(error, "geolocationPermissionDenied");
+			return;
+		} else if (error.code === 2) {
+			showGeolocationErrorMessage(error, "geolocationUnavailable");
+			return;
+		} else if (error.code === 3) {
+			showGeolocationErrorMessage(error, "geolocationTimeout");
+			return;
+		}  
+	}
+	showGeolocationErrorMessage(error, "geolocationError");
 };
 
 var requestStops = function(lon, lat) {
@@ -137,7 +160,7 @@ var compareAgencyStopResults = function(left, right) {
 };
 
 var renderSelectedAgencyStopResult = function(agencyStopResult) {
-	$("#selectedAgencyStopResult").empty();
+	$("#content").empty();
 	var agency = agencyStopResult.agency;
 	var stopResult = agencyStopResult.stopResult;
 	var stop = stopResult.stop;
@@ -154,7 +177,7 @@ var renderSelectedAgencyStopResult = function(agencyStopResult) {
 			frameborder: "0",
 			'border-width':'0px'
 		});
-		$("#selectedAgencyStopResult").append(stopResultFrame);
+		$("#content").append(stopResultFrame);
 	}
 	else
 	{
@@ -163,7 +186,7 @@ var renderSelectedAgencyStopResult = function(agencyStopResult) {
 			href: agencyDepartureBoardUrl,
 		}).append(stop.stop_name);
 		stopResultContainer.append('Weiterleitrung zur Abfahrtstafel von ').append(stopResultLink);
-		$("#selectedAgencyStopResult").append(stopResultContainer);
+		$("#content").append(stopResultContainer);
 
 		var currentUrl = window.location.href;
 
@@ -194,7 +217,8 @@ var renderSelectedAgencyStopResult = function(agencyStopResult) {
 var createAgencyDepartureBoardUrl = function(agency, stop) {
 	var url = agency.agency_departure_board_url_template
 		.replace('{stop_id}', stop.stop_id)
-		.replace('{stop_code}', stop.stop_code);
+		.replace('{stop_code}', stop.stop_code)
+		.replace('{date_iso}', new Date().toISOString());
 	return url;
 };
 

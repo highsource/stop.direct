@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<title>Stop.Direct</title>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<link rel="icon" type="image/png" href="assets/images/favicon.png">
 		<link rel="apple-touch-icon" type="image/png" href="assets/images/app-icon.png">
 		<link href="assets/css/Stop.Direct.css" rel="stylesheet" type="text/css" />
@@ -13,16 +12,39 @@
 	<body>
 		<script src="https://code.jquery.com/jquery-1.11.0.js"></script>
 		<script src="assets/js/Stop.Direct.js"></script>
-		<script>
-			execute();
-		</script>
 		<div class="main">
 			<div id="header" class="header">
 				<div id="agencyStopResults">
 				</div>
 			</div>
-			<div id="selectedAgencyStopResult" class="selectedAgencyStopResult">
+			<div id="content" class="content">
+				<div id="geolocationUndefined" class="errorMessage" style="display:none">
+					<p>Um die nächste Haltestelle zu finden benötigt <b><a href="https://stop.direct">Stop.Direct</a></b> Zugriff auf die Ortungsdienste Ihres Gerätes.</p>
+					<p>Leider scheinen die Ortungsdienste momentan nicht verfügbar oder nicht freigegeben zu sein.</p>
+					<p>Bitte schalten Sie die Ortungsdienste Ihres Gerätes ein oder geben Sie diese Dienste für Ihren Browser frei.</p>
+					<p>Bitte schauen Sie sich die Anleitungen für <a href="https://support.apple.com/en-us/HT207092">iPhone/iPad</a> oder <a href="https://support.google.com/accounts/answer/3467281">Android</a> an.</p> 
+				</div> 
+				<div id="geolocationPermissionDenied" class="errorMessage" style="display:none">
+					<p>Um die nächste Haltestelle zu finden benötigt <b><a href="https://stop.direct">Stop.Direct</a></b> Zugriff auf die Ortungsdienste Ihres Gerätes.</p>
+					<p>Leider konnte die Position nicht ermittelt werden.<span id="geolocationPermissionDeniedMessage"/></p>
+					<p>Bitte erlauben Sie <b><a href="https://stop.direct">Stop.Direct</a></b> Zugriff auf die Ortungsdienste.</p>
+				</div> 
+				<div id="geolocationUnavailable" class="errorMessage" style="display:none">
+					<p>Um die nächste Haltestelle zu finden benötigt <b><a href="https://stop.direct">Stop.Direct</a></b> Zugriff auf die Ortungsdienste Ihres Gerätes.</p>
+					<p>Leider konnte die Position nicht ermittelt werden.<span id="geolocationUnavailableMessage"/></p>
+				</div> 
+				<div id="geolocationTimeout" class="errorMessage" style="display:none">
+					<p>Um die nächste Haltestelle zu finden benötigt <b><a href="https://stop.direct">Stop.Direct</a></b> Zugriff auf die Ortungsdienste Ihres Gerätes.</p>
+					<p>Leider konnte die Position nicht innerhalb der dafür vorgesehenen Zeit ermittelt werden.<span id="geolocationTimeoutMessage"/></p>
+				</div> 
+				<div id="geolocationError" class="errorMessage" style="display:none">
+					<p>Um die nächste Haltestelle zu finden benötigt <b><a href="https://stop.direct">Stop.Direct</a></b> Zugriff auf die Ortungsdienste Ihres Gerätes.</p>
+					<p>Leider konnte die Position nicht ermittelt werden.<span id="geolocationErrorMessage"/></p>
+				</div> 
 			</div>
 		</div>
+		<script>
+			execute();
+		</script>
 	</body>
 </html>

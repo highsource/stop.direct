@@ -1,0 +1,2 @@
+"agency_name","agency_departure_board_url_template"
+db,"https://mobile.bahn.de/bin/mobil/bhftafel.exe/dox?L=vs_html5&boardType=dep&maxJourneys=10&start=yes&input={stop_id}"
