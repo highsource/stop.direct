@@ -1,7 +1,7 @@
 var BASE_URL = '/stops';
 var MAX_DISTANCE = 10000;
 var MAX_COUNT = 10;
-var AGENCY_IDS = 'db,mvv,nvbw,vbb,vgn,by,vrn,rnn,vrt,vrm,vvo';
+var AGENCY_IDS = 'db,mvv,nvbw,vbb,vgn,by,vrn,rnn,vrt,vrm,vvo,vvv';
 var WALKING_DISTANCE = false;
 var MAX_COUNT_PREFERRED_AGENCY_STOP_RESULTS = 25;
 
