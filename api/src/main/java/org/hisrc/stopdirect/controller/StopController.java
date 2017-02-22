@@ -1,5 +1,6 @@
 package org.hisrc.stopdirect.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hisrc.stopdirect.dataccess.AgencyStopRepository;
@@ -37,14 +38,23 @@ public class StopController {
 	@GetMapping(value = "/stops")
 	@ResponseBody
 	public List<AgencyStopResults> findAgencyStopResultsByLonLat(
-			@RequestParam(value = "agencyIds", defaultValue = "db") List<String> agencyIds,
+			@RequestParam(value = "includeAgencyIds", required=false) List<String> includedAgencyIds,
+			@RequestParam(value = "excludeAgencyIds", required=false) List<String> excludedAgencyIds,
 			@RequestParam(value = "lon") double lon, @RequestParam(value = "lat") double lat,
 			@RequestParam(value = "maxCount", defaultValue = "5") int maxCount,
 			@RequestParam(value = "maxDistance", defaultValue = "10000") double maxDistance,
 			@RequestParam(value = "walkingDistance", defaultValue = "false") boolean walkingDistance)
 			throws StopNotFoundException {
 
-		return agencyStopRepository.findNearestStopByAgencyIdAndLonLat(agencyIds, lon, lat, maxCount, maxDistance, walkingDistance);
+		final List<String> agencyIds = new ArrayList<>(
+				includedAgencyIds == null ? agencyStopRepository.findAllAgencyIds() : includedAgencyIds);
+
+		if (excludedAgencyIds != null) {
+			agencyIds.removeAll(excludedAgencyIds);
+		}
+
+		return agencyStopRepository.findNearestStopByAgencyIdAndLonLat(agencyIds, lon, lat, maxCount, maxDistance,
+				walkingDistance);
 	}
 
 }

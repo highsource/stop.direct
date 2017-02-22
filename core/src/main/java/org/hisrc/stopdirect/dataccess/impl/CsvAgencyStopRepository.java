@@ -33,6 +33,7 @@ public class CsvAgencyStopRepository implements AgencyStopRepository {
 
 	private final static String DEFAULT_RESOURCE_NAME = "agencies.txt";
 	private final List<Agency> agencies;
+	private final List<String> agencyIds;
 	private final Map<String, Agency> agencyById;
 	private final Map<Agency, StopRepository> stopRepositoryByAgency;
 	private final MatrixService matrixService = new GraphHopperMatrixService();
@@ -40,11 +41,16 @@ public class CsvAgencyStopRepository implements AgencyStopRepository {
 	public CsvAgencyStopRepository() {
 		try {
 			this.agencies = loadAgencies(getClass().getClassLoader().getResourceAsStream(DEFAULT_RESOURCE_NAME));
+			this.agencyIds = createAgencyIds(this.agencies);
 			this.agencyById = createAgencyById(this.agencies);
 			this.stopRepositoryByAgency = createStopRepositoriesByAgency(agencies);
 		} catch (IOException ioex) {
 			throw new ExceptionInInitializerError(ioex);
 		}
+	}
+
+	private List<String> createAgencyIds(List<Agency> agencies) {
+		return Collections.unmodifiableList(this.agencies.stream().map(Agency::getId).collect(Collectors.toList()));
 	}
 
 	private Map<String, Agency> createAgencyById(List<Agency> agencies) {
@@ -81,6 +87,11 @@ public class CsvAgencyStopRepository implements AgencyStopRepository {
 	public Agency findAgencyById(String agencyId) {
 		return this.agencyById.get(agencyId);
 	}
+	
+	@Override
+	public List<String> findAllAgencyIds() {
+		return this.agencyIds;
+	}
 
 	@Override
 	public StopResult findNearestStopByAgencyIdAndLonLat(String agencyId, double lon, double lat) {
@@ -109,12 +120,13 @@ public class CsvAgencyStopRepository implements AgencyStopRepository {
 			int maxCount, double maxDistance, boolean walkingDistance) {
 		final List<String> ids;
 		if (agencyIds == null || agencyIds.isEmpty()) {
-			ids = this.agencies.stream().map(Agency::getId).collect(Collectors.toList());
+			ids = this.agencyIds;
 		} else {
 			ids = agencyIds;
 		}
 
 		List<AgencyStopResults> agency = ids.stream()
+				.filter(Objects::nonNull)
 				.map(agencyId -> this.findNearestStopByAgencyIdAndLonLat(agencyId, lon, lat, maxCount, maxDistance))
 				.filter(Objects::nonNull).collect(Collectors.toList());
 		if (walkingDistance) {

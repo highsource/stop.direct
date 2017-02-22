@@ -11,6 +11,8 @@ public interface AgencyStopRepository {
 	public Agency findAgencyById(String agencyId);
 
 	public StopResult findNearestStopByAgencyIdAndLonLat(String agencyId, double lon, double lat);
+	
+	public List<String> findAllAgencyIds();
 
 	public List<AgencyStopResults> findNearestStopByAgencyIdAndLonLat(List<String> agencyIds, double lon, double lat,
 			int maxCount, double maxDistance, boolean walkingDistance);
