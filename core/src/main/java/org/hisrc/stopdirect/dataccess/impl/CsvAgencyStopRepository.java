@@ -128,7 +128,9 @@ public class CsvAgencyStopRepository implements AgencyStopRepository {
 		List<AgencyStopResults> agency = ids.stream()
 				.filter(Objects::nonNull)
 				.map(agencyId -> this.findNearestStopByAgencyIdAndLonLat(agencyId, lon, lat, maxCount, maxDistance))
-				.filter(Objects::nonNull).collect(Collectors.toList());
+				.filter(Objects::nonNull)
+				.filter(agencyStopResults -> !agencyStopResults.getStopResults().isEmpty())
+				.collect(Collectors.toList());
 		if (walkingDistance) {
 			List<StopResult> stopResults = agency.stream().map(AgencyStopResults::getStopResults)
 					.flatMap(Collection::stream).collect(Collectors.toList());
@@ -137,7 +139,6 @@ public class CsvAgencyStopRepository implements AgencyStopRepository {
 				List<Double> distances = matrixService.calculateDistances(lon, lat, stops);
 				if (stopResults.size() == distances.size()) {
 					for (int index = 0; index < distances.size(); index++) {
-						final double oldDistance = stopResults.get(index).getDistance();
 						final double newDistance = distances.get(index);
 						stopResults.get(index).setDistance(newDistance);
 					}
