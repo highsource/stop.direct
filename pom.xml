@@ -58,6 +58,11 @@
 		<dependencies>
 			<dependency>
 				<groupId>org.hisrc.stopdirect</groupId>
+				<artifactId>stopdirect-data</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hisrc.stopdirect</groupId>
 				<artifactId>stopdirect-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>

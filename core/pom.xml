@@ -11,6 +11,10 @@
 	</parent>
 	<dependencies>
 		<dependency>
+			<groupId>org.hisrc.stopdirect</groupId>
+			<artifactId>stopdirect-data</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>net.sf.jsi</groupId>
 			<artifactId>jsi</artifactId>
 		</dependency>
